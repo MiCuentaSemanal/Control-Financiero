@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102b4e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mi Control">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Mi Control Financiero</title>
+<style>
+:root{--navy:#102b4e;--blue:#1d5b96;--blue2:#2d78bb;--pale:#eaf3fc;--bg:#f2f6fb;--ink:#182b42;--muted:#71839a;--line:#e0e8f1;--green:#16845b;--red:#c44e52;--amber:#bd8120}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{background:linear-gradient(135deg,#102b4e,#1e5b95);color:#fff;padding:22px 17px 18px;border-radius:0 0 24px 24px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}.brand{font-size:21px;font-weight:850}.sub{font-size:12px;color:#d4e3f2;margin-top:4px}
+main{max-width:780px;margin:auto;padding:14px 13px 100px}.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:17px}.hero-stat{background:#ffffff18;border:1px solid #ffffff25;border-radius:13px;padding:11px}.hero-stat small{display:block;color:#d5e4f2;font-size:11px}.hero-stat strong{display:block;font-size:19px;margin-top:4px}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:#fff;padding:7px;border-radius:15px;border:1px solid var(--line);position:sticky;top:0;z-index:5;margin:0 0 13px;box-shadow:0 3px 12px #102b4e0b}
+.nav button{background:transparent;color:#64758a;padding:9px 3px;font-size:11px;border-radius:10px}.nav button.active{background:var(--pale);color:var(--navy)}
+.view{display:none}.view.active{display:block}.card{background:white;border:1px solid var(--line);border-radius:17px;padding:15px;margin-bottom:12px;box-shadow:0 4px 15px #102b4e08}
+h2{font-size:16px;color:var(--navy);margin:0 0 12px}h3{font-size:14px;margin:0;color:var(--ink)}.muted{font-size:12px;color:var(--muted)}.big{font-size:27px;font-weight:850;letter-spacing:-.5px}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mini{background:#f5f8fc;border-radius:12px;padding:10px}.mini small{display:block;color:var(--muted);font-size:10px}.mini b{display:block;margin-top:4px;font-size:15px;overflow-wrap:anywhere}
+label{display:block;font-size:11px;color:#52677f;margin:0 0 5px}input,select,textarea{width:100%;border:1px solid #d7e1ec;border-radius:10px;padding:10px 11px;font-size:14px;background:#fff;color:var(--ink);min-width:0}textarea{resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid #b9d7f3;border-color:var(--blue)}
+.field{margin-bottom:10px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.formgrid.three{grid-template-columns:repeat(3,1fr)}
+button{border:0;border-radius:10px;padding:10px 13px;background:var(--blue);color:#fff;font-weight:700;font-size:13px;cursor:pointer}.secondary{background:var(--pale);color:var(--navy)}.danger{background:#fff0f0;color:var(--red)}.smallbtn{padding:6px 9px;font-size:11px}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.item{padding:11px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.itemline{display:flex;justify-content:space-between;gap:8px;align-items:center}.itemtitle{font-weight:750;font-size:13px}.amount{font-weight:800;white-space:nowrap}.tag{display:inline-block;font-size:10px;border-radius:20px;padding:4px 7px;background:#edf3f9;color:#52677f}.tag.green{background:#e8f6ef;color:var(--green)}.tag.amber{background:#fff5e3;color:var(--amber)}.tag.red{background:#fff0f0;color:var(--red)}
+.empty{text-align:center;color:var(--muted);font-size:12px;padding:18px 5px}.bar{height:8px;background:#e8eef5;border-radius:30px;overflow:hidden;margin-top:7px}.bar span{display:block;height:100%;background:var(--blue);border-radius:30px}
+.cardvisual{background:linear-gradient(135deg,#14385f,#2b70ac);color:white;border-radius:15px;padding:14px;min-height:118px;display:flex;flex-direction:column;justify-content:space-between}.cardvisual small{color:#d8e8f6}.cardvisual b{font-size:18px}.cardvisual .row{font-size:11px;color:#e2eef8}
+hr{border:0;border-top:1px solid var(--line);margin:12px 0}.hint{background:#f2f7fc;border-radius:10px;padding:10px;color:#52677f;font-size:11px;line-height:1.45}.foot{text-align:center;color:#91a0b1;font-size:10px;padding:10px}
+@media(min-width:650px){main{padding-top:20px}.nav{grid-template-columns:repeat(7,1fr)}.nav button{font-size:12px}.grid3 .mini{padding:13px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><div><div class="brand">Mi Control Financiero</div><div class="sub">Tus tarjetas, pagos e ingresos en un solo lugar</div></div><div style="font-size:27px">💙</div></div>
+ <div class="hero-grid">
+  <div class="hero-stat"><small>Deuda en tarjetas</small><strong id="headDebt">S/ 0.00</strong></div>
+  <div class="hero-stat"><small>Por cobrar</small><strong id="headReceivable">S/ 0.00</strong></div>
+  <div class="hero-stat"><small>Albañil pendiente</small><strong id="headBuilder">S/ 0.00</strong></div>
+  <div class="hero-stat"><small>Pagos registrados este mes</small><strong id="headPaid">S/ 0.00</strong></div>
+ </div>
+</header>
+<main>
+<nav class="nav" aria-label="Secciones">
+ <button class="active" data-view="home">⌂<br>Inicio</button>
+ <button data-view="cards">▣<br>Tarjetas</button>
+ <button data-view="builder">⌂<br>Albañil</button>
+ <button data-view="income">＋<br>Por cobrar</button>
+ <button data-view="calendar">▦<br>Agenda</button>
+ <button data-view="history">↻<br>Movimientos</button>
+ <button data-view="reports">▤<br>Reportes</button>
+</nav>
+
+<section class="view active" id="home">
+ <div class="card">
+  <div class="row"><h2>Resumen financiero</h2><span class="tag">Soles (S/)</span></div>
+  <div class="grid2">
+   <div class="mini"><small>Deuda total de tarjetas</small><b id="sumDebt">S/ 0.00</b></div>
+   <div class="mini"><small>Crédito disponible</small><b id="sumAvailable">S/ 0.00</b></div>
+   <div class="mini"><small>Ingresos por cobrar</small><b id="sumReceivable">S/ 0.00</b></div>
+   <div class="mini"><small>Saldo del albañil</small><b id="sumBuilder">S/ 0.00</b></div>
+  </div>
+ </div>
+ <div class="card"><h2>Próximos compromisos</h2><div id="homeUpcoming"></div></div>
+ <div class="card"><h2>Últimos movimientos</h2><div id="homeRecent"></div></div>
+ <div class="hint">Consejo: registra cada compra con la tarjeta correspondiente y cada abono como pago. El pago de una tarjeta reduce su deuda; no se contará como una segunda compra.</div>
+</section>
+
+<section class="view" id="cards">
+ <div class="card">
+  <div class="row"><h2>Mis tres tarjetas de crédito</h2><span class="tag">3 espacios</span></div>
+  <div class="grid3" id="cardVisuals"></div>
+ </div>
+ <div class="card">
+  <h2>Configurar tarjeta</h2>
+  <div class="field"><label>Selecciona tarjeta</label><select id="cardPick"><option value="0">Tarjeta 1</option><option value="1">Tarjeta 2</option><option value="2">Tarjeta 3</option></select></div>
+  <div class="formgrid">
+   <div class="field"><label>Nombre / banco (opcional)</label><input id="cardName" placeholder="Ej. Banco o tarjeta"></div>
+   <div class="field"><label>Límite de crédito (S/)</label><input id="cardLimit" type="number" min="0" step=".01" placeholder="0.00"></div>
+   <div class="field"><label>Deuda inicial actual (S/)</label><input id="cardOpening" type="number" min="0" step=".01" placeholder="0.00"></div>
+   <div class="field"><label>Fecha de cierre (día del mes)</label><input id="cardClose" type="number" min="1" max="31" placeholder="Ej. 20"></div>
+   <div class="field"><label>Fecha de vencimiento (día del mes)</label><input id="cardDue" type="number" min="1" max="31" placeholder="Ej. 5"></div>
+   <div class="field"><label>Pago mínimo (S/)</label><input id="cardMinimum" type="number" min="0" step=".01" placeholder="0.00"></div>
+  </div>
+  <div class="actions"><button id="saveCard">Guardar tarjeta</button></div>
+ </div>
+ <div class="card">
+  <h2>Registrar compra con tarjeta</h2>
+  <div class="formgrid">
+   <div class="field"><label>Tarjeta</label><select id="purchaseCard"><option value="0">Tarjeta 1</option><option value="1">Tarjeta 2</option><option value="2">Tarjeta 3</option></select></div>
+   <div class="field"><label>Fecha de compra</label><input id="purchaseDate" type="date"></div>
+   <div class="field"><label>Descripción</label><input id="purchaseDesc" placeholder="Ej. Materiales, comida"></div>
+   <div class="field"><label>Importe total (S/)</label><input id="purchaseAmount" type="number" min="0" step=".01" placeholder="0.00"></div>
+   <div class="field"><label>Número de cuotas</label><input id="purchaseInstallments" type="number" min="1" step="1" value="1"></div>
+   <div class="field"><label>Primera fecha de pago</label><input id="purchaseDue" type="date"></div>
+  </div>
+  <div class="actions"><button id="addPurchase">+ Registrar compra</button></div>
+  <div class="muted" style="margin-top:7px">La compra completa aumenta la deuda registrada. Las cuotas son una referencia para organizar el pago; no se calcula interés bancario automáticamente.</div>
+ </div>
+ <div class="card">
+  <h2>Registrar pago a tarjeta</h2>
+  <div class="formgrid">
+   <div class="field"><label>Tarjeta</label><select id="paymentCard"><option value="0">Tarjeta 1</option><option value="1">Tarjeta 2</option><option value="2">Tarjeta 3</option></select></div>
+   <div class="field"><label>Fecha de pago</label><input id="paymentDate" type="date"></div>
+   <div class="field"><label>Importe abonado (S/)</label><input id="paymentAmount" type="number" min="0" step=".01" placeholder="0.00"></div>
+   <div class="field"><label>Nota (opcional)</label><input id="paymentNote" placeholder="Ej. Pago del mes"></div>
+  </div>
+  <div class="actions"><button id="addCardPayment">+ Registrar abono</button></div>
+ </div>
+ <div class="card"><h2>Compras y pagos registrados</h2><div id="cardTransactions"></div></div>
+</section>
+
+<section class="view" id="builder">
+ <div class="card">
+  <div class="row"><h2>Control del albañil</h2><span class="tag amber">Pagos variables</span></div>
+  <div class="grid2">
+   <div class="mini"><small>Total acordado (si aplica)</small><b id="builderBudgetView">No definido</b></div>
+   <div class="mini"><small>Total abonado</small><b id="builderPaidView">S/ 0.00</b></div>
+  </div>
+  <div class="field" style="margin-top:10px"><label>Presupuesto total de la obra (opcional)</label><input id="builderBudget" type="number" min="0" step=".01" placeholder="Si tienes un monto acordado"></div>
+  <div class="actions"><button id="saveBuilderBudget" class="secondary">Guardar presupuesto</button></div>
+  <hr>
+  <h2>Registrar pago semanal</h2>
+  <div class="formgrid">
+   <div class="field"><label>Semana / fecha del pago</label><input id="builderDate" type="date"></div>
+   <div class="field"><label>Importe pagado (S/)</label><input id="builderAmount" type="number" min="0" step=".01" placeholder="0.00"></div>
+   <div class="field"><label>Trabajo o avance</label><input id="builderWork" placeholder="Ej. Levantado de pared"></div>
+   <div class="field"><label>Observación (opcional)</label><input id="builderNote" placeholder="Ej. Adelanto, materiales"></div>
+  </div>
+  <div class="actions"><button id="addBuilderPayment">+ Registrar pago</button></div>
+  <div class="muted" style="margin-top:7px">Si no existe un presupuesto total, el sistema mostrará el total pagado, pero no inventará un saldo pendiente.</div>
+ </div>
+ <div class="card"><h2>Historial de pagos al albañil</h2><div id="builderHistory"></div></div>
+</section>
+
+<section class="view" id="income">
+ <div class="card">
+  <div class="row"><h2>Ingresos pendientes de clientes</h2><span class="tag green">Por cobrar</span></div>
+  <div class="grid2"><div class="mini"><small>Total por cobrar</small><b id="receivableTotal">S/ 0.00</b></div><div class="mini"><small>Total cobrado</small><b id="receivableCollected">S/ 0.00</b></div></div>
+  <hr><h2>Registrar venta o trabajo pendiente</h2>
+  <div class="formgrid">
+   <div class="field"><label>Cliente / negocio</label><input id="clientName" placeholder="Nombre del cliente"></div>
+   <div class="field"><label>Descripción</label><input id="clientDesc" placeholder="Ej. Venta, servicio, pedido"></div>
+   <div class="field"><label>Monto total (S/)</label><input id="clientAmount" type="number" min="0" step=".01" placeholder="0.00"></div>
+   <div class="field"><label>Adelanto recibido (S/)</label><input id="clientAdvance" type="number" min="0" step=".01" placeholder="0.00"></div>
+   <div class="field"><label>Fecha prometida de cobro</label><input id="clientDue" type="date"></div>
+   <div class="field"><label>Medio esperado</label><select id="clientMethod"><option value="Transferencia">Transferencia</option><option value="Efectivo">Efectivo</option><option value="Ambos">Ambos / por definir</option></select></div>
+  </div>
+  <div class="actions"><button id="addReceivable">+ Registrar por cobrar</button></div>
+ </div>
+ <div class="card"><h2>Registrar cobro / abono</h2>
+  <div class="formgrid">
+   <div class="field"><label>Cuenta por cobrar</label><select id="collectPick"></select></div>
+   <div class="field"><label>Fecha de cobro</label><input id="collectDate" type="date"></div>
+   <div class="field"><label>Importe recibido (S/)</label><input id="collectAmount" type="number" min="0" step=".01" placeholder="0.00"></div>
+   <div class="field"><label>Medio de cobro</label><select id="collectMethod"><option value="Transferencia">Transferencia</option><option value="Efectivo">Efectivo</option></select></div>
+  </div>
+  <div class="actions"><button id="addCollection">+ Registrar cobro</button></div>
+ </div>
+ <div class="card"><h2>Clientes y saldos pendientes</h2><div id="receivableList"></div></div>
+</section>
+
+<section class="view" id="calendar">
+ <div class="card"><h2>Agenda de pagos y cobros</h2><div class="field"><label>Ver desde</label><input id="calendarFrom" type="date"></div><div id="calendarList"></div></div>
+ <div class="card"><div class="hint">La agenda reúne fechas de vencimiento de tarjetas, fechas prometidas de cobro y pagos semanales al albañil que registres. Los pagos al albañil se agregan al calendario cuando los registras.</div></div>
+</section>
+
+<section class="view" id="history">
+ <div class="card"><div class="row"><h2>Todos los movimientos</h2><button class="secondary smallbtn" id="exportCsv">Exportar CSV</button></div><div id="allHistory"></div></div>
+</section>
+
+<section class="view" id="reports">
+ <div class="card"><h2>Reporte financiero</h2>
+  <div class="grid2">
+   <div class="mini"><small>Compras con tarjeta</small><b id="reportPurchases">S/ 0.00</b></div>
+   <div class="mini"><small>Abonos a tarjetas</small><b id="reportCardPayments">S/ 0.00</b></div>
+   <div class="mini"><small>Pagos al albañil</small><b id="reportBuilder">S/ 0.00</b></div>
+   <div class="mini"><small>Cobros recibidos</small><b id="reportCollections">S/ 0.00</b></div>
+  </div>
+  <hr><h2>Resumen por tarjeta</h2><div id="reportCards"></div>
+ </div>
+ <div class="card"><h2>Respaldo de información</h2><p class="muted">Descarga una copia de tus datos para guardarla. Puedes restaurarla en otro dispositivo usando el archivo JSON.</p>
+  <div class="actions"><button id="backupJson">Descargar respaldo</button><button class="secondary" id="restoreButton">Restaurar respaldo</button><input id="restoreFile" type="file" accept="application/json" hidden></div>
+  <p class="muted">Los datos se guardan en este navegador. Exporta respaldos periódicamente para no perder tu información si cambias de dispositivo o navegador.</p>
+ </div>
+</section>
+<div class="foot">Mi Control Financiero · Uso personal · Montos en S/</div>
+</main>
+<script>
+const STORE='miControlFinanciero_v1';
+const today=()=>new Date().toISOString().slice(0,10);
+const blank=()=>({cards:[0,1,2].map(i=>({name:'Tarjeta '+(i+1),limit:0,opening:0,close:'',due:'',minimum:0})),purchases:[],cardPayments:[],builder:{budget:null,payments:[]},receivables:[],collections:[]});
+let data;try{data=JSON.parse(localStorage.getItem(STORE))||blank()}catch(e){data=blank()}
+function persist(){localStorage.setItem(STORE,JSON.stringify(data));render()}
+const num=v=>Number(v)||0, sum=a=>a.reduce((s,x)=>s+num(x),0);
+const money=v=>'S/ '+num(v).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dateFmt=s=>s?new Date(s+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'}):'Sin fecha';
+function cardDebt(i){return num(data.cards[i].opening)+sum(data.purchases.filter(x=>x.card===i).map(x=>x.amount))-sum(data.cardPayments.filter(x=>x.card===i).map(x=>x.amount))}
+function receivableBalance(id){let r=data.receivables.find(x=>x.id===id);return r?Math.max(0,r.amount-r.advance-sum(data.collections.filter(c=>c.receivableId===id).map(c=>c.amount))):0}
+function allDebt(){return [0,1,2].reduce((s,i)=>s+Math.max(0,cardDebt(i)),0)}
+function totalReceivable(){return sum(data.receivables.map(r=>receivableBalance(r.id)))}
+function builderPaid(){return sum(data.builder.payments.map(p=>p.amount))}
+function builderBalance(){return data.builder.budget===null?null:Math.max(0,num(data.builder.budget)-builderPaid())}
+function allMovements(){
+ let a=[];
+ data.purchases.forEach(x=>a.push({date:x.date,type:'Compra con tarjeta',detail:data.cards[x.card].name+' · '+x.desc,amount:x.amount,kind:'out'}));
+ data.cardPayments.forEach(x=>a.push({date:x.date,type:'Abono a tarjeta',detail:data.cards[x.card].name+' · '+(x.note||'Pago'),amount:x.amount,kind:'pay'}));
+ data.builder.payments.forEach(x=>a.push({date:x.date,type:'Pago al albañil',detail:x.work+(x.note?' · '+x.note:''),amount:x.amount,kind:'pay'}));
+ data.collections.forEach(x=>{let r=data.receivables.find(y=>y.id===x.receivableId);a.push({date:x.date,type:'Cobro recibido',detail:(r?r.client:'Cliente')+' · '+x.method,amount:x.amount,kind:'in'})});
+ data.receivables.forEach(r=>a.push({date:r.due,type:'Cuenta por cobrar',detail:r.client+' · '+r.desc,amount:receivableBalance(r.id),kind:'due'}));
+ return a.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+}
+function upcoming(){
+ let a=[];
+ data.cards.forEach((c,i)=>{if(c.due){let d=new Date();let y=d.getFullYear(),m=d.getMonth();let day=Math.min(31,Math.max(1,num(c.due)));let dt=new Date(y,m,day);if(dt<new Date(d.getFullYear(),d.getMonth(),d.getDate()))dt=new Date(y,m+1,day);a.push({date:dt.toISOString().slice(0,10),title:'Vencimiento '+c.name,amount:Math.max(0,cardDebt(i)),type:'Tarjeta'})}});
+ data.receivables.forEach(r=>{let b=receivableBalance(r.id);if(b>0&&r.due)a.push({date:r.due,title:'Cobrar a '+r.client,amount:b,type:'Cobro'})});
+ data.builder.payments.forEach(p=>a.push({date:p.date,title:'Pago albañil · '+p.work,amount:p.amount,type:'Pagado'}));
+ return a.sort((a,b)=>a.date.localeCompare(b.date));
+}
+function nav(view){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===view));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===view));window.scrollTo({top:0,behavior:'smooth'});render()}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>nav(b.dataset.view));
+function render(){
+ let debt=allDebt(),recv=totalReceivable(),bBal=builderBalance(),paidMonth=sum(data.cardPayments.filter(x=>x.date?.slice(0,7)===today().slice(0,7)).map(x=>x.amount))+sum(data.builder.payments.filter(x=>x.date?.slice(0,7)===today().slice(0,7)).map(x=>x.amount));
+ document.getElementById('headDebt').textContent=money(debt);document.getElementById('headReceivable').textContent=money(recv);document.getElementById('headBuilder').textContent=bBal===null?'No definido':money(bBal);document.getElementById('headPaid').textContent=money(paidMonth);
+ document.getElementById('sumDebt').textContent=money(debt);document.getElementById('sumAvailable').textContent=money(data.cards.reduce((s,c,i)=>s+Math.max(0,num(c.limit)-Math.max(0,cardDebt(i))),0));document.getElementById('sumReceivable').textContent=money(recv);document.getElementById('sumBuilder').textContent=bBal===null?'No definido':money(bBal);
+ document.getElementById('cardVisuals').innerHTML=data.cards.map((c,i)=>`<div class="cardvisual"><small>${esc(c.name||'Tarjeta '+(i+1))}</small><b>${money(Math.max(0,cardDebt(i)))}</b><div class="row"><span>Disponible</span><strong>${money(Math.max(0,num(c.limit)-Math.max(0,cardDebt(i))))}</strong></div></div>`).join('');
+ let upcomingItems=upcoming().filter(x=>x.type!=='Pagado').slice(0,6);
+ document.getElementById('homeUpcoming').innerHTML=upcomingItems.length?upcomingItems.map(x=>`<div class="item"><div class="itemline"><div><div class="itemtitle">${esc(x.title)}</div><div class="muted">${dateFmt(x.date)} · ${x.type}</div></div><b class="amount">${money(x.amount)}</b></div></div>`).join(''):'<div class="empty">No hay vencimientos ni cobros próximos registrados.</div>';
+ let recent=allMovements().filter(x=>x.type!=='Cuenta por cobrar').slice(0,5);
+ document.getElementById('homeRecent').innerHTML=recent.length?recent.map(movementHtml).join(''):'<div class="empty">Todavía no hay movimientos.</div>';
+ // selected card settings
+ let i=num(document.getElementById('cardPick').value),c=data.cards[i];
+ ['cardName','cardLimit','cardOpening','cardClose','cardDue','cardMinimum'].forEach((id,j)=>{let v=[c.name,c.limit,c.opening,c.close,c.due,c.minimum][j];let el=document.getElementById(id);if(document.activeElement!==el)el.value=v??''});
+ document.getElementById('cardTransactions').innerHTML=allMovements().filter(x=>['Compra con tarjeta','Abono a tarjeta'].includes(x.type)).map(movementHtml).join('')||'<div class="empty">No hay compras ni abonos registrados.</div>';
+ document.getElementById('builderBudgetView').textContent=data.builder.budget===null?'No definido':money(data.builder.budget);document.getElementById('builderPaidView').textContent=money(builderPaid());if(document.activeElement!==document.getElementById('builderBudget'))document.getElementById('builderBudget').value=data.builder.budget??'';
+ document.getElementById('builderHistory').innerHTML=data.builder.payments.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(p=>`<div class="item"><div class="itemline"><div><div class="itemtitle">${esc(p.work)}</div><div class="muted">${dateFmt(p.date)}${p.note?' · '+esc(p.note):''}</div></div><b class="amount">${money(p.amount)}</b></div></div>`).join('')||'<div class="empty">Todavía no registras pagos.</div>';
+ let collected=sum(data.collections.map(c=>c.amount));
+ document.getElementById('receivableTotal').textContent=money(recv);document.getElementById('receivableCollected').textContent=money(collected);
+ document.getElementById('receivableList').innerHTML=data.receivables.map(r=>{let bal=receivableBalance(r.id),got=r.amount-bal;return `<div class="item"><div class="itemline"><div><div class="itemtitle">${esc(r.client)} · ${esc(r.desc)}</div><div class="muted">${dateFmt(r.due)} · ${esc(r.method)}</div></div><span class="tag ${bal===0?'green':'amber'}">${bal===0?'Cobrado':got>0?'Parcial':'Pendiente'}</span></div><div class="row" style="margin-top:6px"><span class="muted">Total ${money(r.amount)} · Recibido ${money(got)}</span><b class="amount">Falta ${money(bal)}</b></div></div>`}).join('')||'<div class="empty">No hay ingresos pendientes registrados.</div>';
+ let open=data.receivables.filter(r=>receivableBalance(r.id)>0);let pick=document.getElementById('collectPick'),old=pick.value;pick.innerHTML=open.length?open.map(r=>`<option value="${r.id}">${esc(r.client)} — ${money(receivableBalance(r.id))} pendiente</option>`).join(''):'<option value="">No hay cuentas pendientes</option>';if(open.some(r=>r.id===old))pick.value=old;
+ let from=document.getElementById('calendarFrom').value||today();let cal=upcoming().filter(x=>x.date&&x.date>=from);
+ document.getElementById('calendarList').innerHTML=cal.length?cal.map(x=>`<div class="item"><div class="itemline"><div><div class="itemtitle">${esc(x.title)}</div><div class="muted">${dateFmt(x.date)} · ${x.type}</div></div><b class="amount">${money(x.amount)}</b></div></div>`).join(''):'<div class="empty">No hay compromisos futuros desde esa fecha.</div>';
+ document.getElementById('allHistory').innerHTML=allMovements().map(movementHtml).join('')||'<div class="empty">No hay movimientos registrados.</div>';
+ document.getElementById('reportPurchases').textContent=money(sum(data.purchases.map(x=>x.amount)));document.getElementById('reportCardPayments').textContent=money(sum(data.cardPayments.map(x=>x.amount)));document.getElementById('reportBuilder').textContent=money(builderPaid());document.getElementById('reportCollections').textContent=money(collected);
+ document.getElementById('reportCards').innerHTML=data.cards.map((c,i)=>`<div class="item"><div class="itemline"><b>${esc(c.name)}</b><b>${money(Math.max(0,cardDebt(i)))}</b></div><div class="muted">Límite ${money(c.limit)} · Disponible ${money(Math.max(0,c.limit-Math.max(0,cardDebt(i))))} · Vence día ${c.due||'—'}</div></div>`).join('');
+}
+function movementHtml(m){let cls=m.kind==='in'?'green':m.kind==='due'?'amber':m.kind==='out'?'red':'';return `<div class="item"><div class="itemline"><div><div class="itemtitle">${esc(m.type)}</div><div class="muted">${dateFmt(m.date)} · ${esc(m.detail)}</div></div><div style="text-align:right"><b class="amount">${money(m.amount)}</b><br><span class="tag ${cls}">${m.kind==='in'?'Ingreso':m.kind==='out'?'Compra':m.kind==='due'?'Por cobrar':'Pago'}</span></div></div></div>`}
+function val(id){return document.getElementById(id).value}
+function positive(v){return Number.isFinite(Number(v))&&Number(v)>0}
+function clear(ids){ids.forEach(id=>document.getElementById(id).value='')}
+document.getElementById('cardPick').onchange=render;
+document.getElementById('saveCard').onclick=()=>{let i=num(val('cardPick'));let c={name:val('cardName').trim()||'Tarjeta '+(i+1),limit:num(val('cardLimit')),opening:num(val('cardOpening')),close:val('cardClose'),due:val('cardDue'),minimum:num(val('cardMinimum'))};if(c.limit<0||c.opening<0||c.minimum<0){alert('Revisa los montos.');return}data.cards[i]=c;persist();alert('Tarjeta guardada.')};
+document.getElementById('addPurchase').onclick=()=>{let amount=num(val('purchaseAmount')),desc=val('purchaseDesc').trim();if(!desc||!positive(amount)){alert('Completa la descripción y un importe válido.');return}let installments=Math.max(1,Math.floor(num(val('purchaseInstallments'))||1));data.purchases.push({id:crypto.randomUUID(),card:num(val('purchaseCard')),date:val('purchaseDate')||today(),desc,amount,installments,due:val('purchaseDue')});clear(['purchaseDesc','purchaseAmount','purchaseDue']);document.getElementById('purchaseInstallments').value=1;persist()};
+document.getElementById('addCardPayment').onclick=()=>{let amount=num(val('paymentAmount'));if(!positive(amount)){alert('Ingresa un abono mayor que cero.');return}let i=num(val('paymentCard'));if(amount>Math.max(0,cardDebt(i))){if(!confirm('El abono supera la deuda registrada de esta tarjeta. ¿Deseas guardarlo de todas formas?'))return}data.cardPayments.push({id:crypto.randomUUID(),card:i,date:val('paymentDate')||today(),amount,note:val('paymentNote').trim()});clear(['paymentAmount','paymentNote']);persist()};
+document.getElementById('saveBuilderBudget').onclick=()=>{let v=val('builderBudget');data.builder.budget=v===''?null:num(v);persist()};
+document.getElementById('addBuilderPayment').onclick=()=>{let amount=num(val('builderAmount')),work=val('builderWork').trim();if(!positive(amount)||!work){alert('Completa el avance y el importe.');return}data.builder.payments.push({id:crypto.randomUUID(),date:val('builderDate')||today(),amount,work,note:val('builderNote').trim()});clear(['builderAmount','builderWork','builderNote']);persist()};
+document.getElementById('addReceivable').onclick=()=>{let client=val('clientName').trim(),desc=val('clientDesc').trim(),amount=num(val('clientAmount')),advance=num(val('clientAdvance'));if(!client||!desc||!positive(amount)||advance<0||advance>amount){alert('Revisa cliente, descripción, monto y adelanto. El adelanto no puede superar el total.');return}data.receivables.push({id:crypto.randomUUID(),client,desc,amount,advance,due:val('clientDue'),method:val('clientMethod')});clear(['clientName','clientDesc','clientAmount','clientAdvance','clientDue']);persist()};
+document.getElementById('addCollection').onclick=()=>{let id=val('collectPick'),amount=num(val('collectAmount'));if(!id||!positive(amount)){alert('Selecciona una cuenta e ingresa un cobro válido.');return}if(amount>receivableBalance(id)){alert('El cobro supera el saldo pendiente.');return}data.collections.push({id:crypto.randomUUID(),receivableId:id,date:val('collectDate')||today(),amount,method:val('collectMethod')});clear(['collectAmount']);persist()};
+document.getElementById('calendarFrom').value=today();document.getElementById('calendarFrom').onchange=render;
+document.getElementById('purchaseDate').value=today();document.getElementById('paymentDate').value=today();document.getElementById('builderDate').value=today();document.getElementById('collectDate').value=today();
+document.getElementById('backupJson').onclick=()=>download('mi-control-financiero-respaldo.json',JSON.stringify(data,null,2),'application/json');
+document.getElementById('restoreButton').onclick=()=>document.getElementById('restoreFile').click();
+document.getElementById('restoreFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!d.cards||!d.builder||!d.receivables)throw Error();if(confirm('Esto reemplazará los datos actuales. ¿Continuar?')){data=d;persist();alert('Respaldo restaurado.')}}catch(err){alert('El archivo no parece ser un respaldo válido.')}e.target.value=''};
+document.getElementById('exportCsv').onclick=()=>{let rows=[['Fecha','Tipo','Detalle','Importe'],...allMovements().map(x=>[x.date||'',x.type,x.detail,x.amount])];let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\n');download('movimientos-mi-control.csv','\ufeff'+csv,'text/csv;charset=utf-8')};
+function download(name,content,type){let blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();URL.revokeObjectURL(url)}
+render();
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
